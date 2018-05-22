@@ -19,7 +19,7 @@ RUN dep init && dep ensure
 
 # Build the binary, with a few flags that will allow us 
 # to run the binary in Alpine. 
-RUN CGO_ENABLED=0 GOOS=linux go build -o shippy-user-service -a -installsuffix cgo main.go repository.go handler.go database.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
 
 # Here we're using a second FROM statement, which tells Docker to start 
 # a new build process with this image
@@ -34,7 +34,7 @@ WORKDIR /app
 #ADD user-service /app/user-service 
 # Instead of pulling binary from Host machine, we pill it from the container named builder!
 # Copies into /app directory, which is the current working directory.
-COPY --from=builder /go/src/github.com/dillonlpeterson/shippy-user-service/shippy-user-service .
+COPY --from=builder /go/src/github.com/dillonlpeterson/shippy-user-service .
 
 # As usual, run the binary!
 CMD ["./shippy-user-service"]
