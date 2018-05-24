@@ -19,7 +19,7 @@ RUN dep init && dep ensure
 
 # Build the binary, with a few flags that will allow us 
 # to run the binary in Alpine. 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
 # Here we're using a second FROM statement, which tells Docker to start 
 # a new build process with this image

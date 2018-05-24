@@ -1,7 +1,10 @@
 package main
 
 import (
+	"log"
+
 	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
+	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
 
@@ -29,15 +32,32 @@ func (s *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response)
 }
 
 func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	user, err := s.repo.GetByEmailAndPassword(req)
+	log.Println("Logging in with:", req.Email, req.Password)
+	user, err := srv.repo.GetByEmail(req.Email)
+	log.Println(user)
 	if err != nil {
 		return err
 	}
-	res.Token = "testingabc"
+	// Compare our given password against the hashed password
+	// Stored in the database
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return err
+	}
+
+	token, err := srv.tokenService.Encode(user)
+	if err != nil {
+		return err
+	}
+	res.Token = token
 	return nil
 }
 
 func (s *service) Create(ctx context.Context, req *pb.User, res *pv.Response) error {
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	req.Password = string(hashedPass)
 	if err := srv.repo.Create(req); err != nil {
 		return err
 	}
