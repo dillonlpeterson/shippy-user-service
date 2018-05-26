@@ -52,7 +52,7 @@ func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 	return nil
 }
 
-func (s *service) Create(ctx context.Context, req *pb.User, res *pv.Response) error {
+func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
