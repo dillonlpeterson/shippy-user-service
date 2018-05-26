@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	jwt "github.com/dgrijalva/jwt-go"
 	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
 )
@@ -37,30 +39,29 @@ func (srv *TokenService) Decode(tokenString string) (*CustomClaims, error) {
 	})
 
 	// Validate the token and return the custom claims
-	if claims; ok := token.Claims.(*CustomClaims); ok && token.Valid {
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
-	}
-	else {
+	} else {
 		return nil, err
 	}
 }
 
-// Encode a claim into a JWT 
+// Encode a claim into a JWT
 func (srv *TokenService) Encode(user *pb.User) (string, error) {
-	expireToken := time.Now().Add(time.Hour * 72).Unix() 
+	expireToken := time.Now().Add(time.Hour * 72).Unix()
 
-	// Create the claims 
+	// Create the claims
 	claims := CustomClaims{
-		user, 
+		user,
 		jwt.StandardClaims{
-			ExpiresAt: expireToken, 
-			Issuer: "go.micro.srv.user",
+			ExpiresAt: expireToken,
+			Issuer:    "go.micro.srv.user",
 		},
 	}
 
-	// Create token 
+	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// SIgn token and return 
+	// SIgn token and return
 	return token.SignedString(key)
 }
