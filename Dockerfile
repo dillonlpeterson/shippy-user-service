@@ -9,8 +9,7 @@ WORKDIR /go/src/github.com/dillonlpeterson/shippy-user-service
 # Copy the current directory into our workdir 
 COPY . .
 
-# Here we are pulling in godep, which is a dependency management tool
-# We're going to use godep instead of go get (Gets fussy with sub-packages sometimes)
+# Don't need go-get anymore since we confined everythung to its own repository!
 RUN go get 
 
 # Build the binary, with a few flags that will allow us 

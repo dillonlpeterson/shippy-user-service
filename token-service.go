@@ -55,7 +55,7 @@ func (srv *TokenService) Encode(user *pb.User) (string, error) {
 		jwt.StandardClaims{
 			ExpiresAt: expireToken, 
 			Issuer: "go.micro.srv.user",
-		}
+		},
 	}
 
 	// Create token 
