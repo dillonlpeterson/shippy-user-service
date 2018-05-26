@@ -37,7 +37,7 @@ func (srv *TokenService) Decode(tokenString string) (*CustomClaims, error) {
 	})
 
 	// Validate the token and return the custom claims
-	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+	if claims; ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
 	}
 	else {
