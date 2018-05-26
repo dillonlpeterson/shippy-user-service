@@ -8,7 +8,7 @@ import (
 // BeforeCreate Hooks into GORMS event lifecycle (Called before new entity is saved).
 // Notice, we don't need to manually manage database connections here.
 func (model *User) BeforeCreate(scope *gorm.Scope) error {
-	randUUID, _ := uuid.NewV4()
+	randUUID := uuid.Must(uuid.NewV4())
 	/*if err != nil {
 		return err
 	}*/
