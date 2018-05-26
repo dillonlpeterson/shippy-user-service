@@ -27,13 +27,13 @@ func (s *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response)
 	if err != nil {
 		return err
 	}
-	res.Users = user
+	res.Users = users
 	return nil
 }
 
 func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 	log.Println("Logging in with:", req.Email, req.Password)
-	user, err := srv.repo.GetByEmail(req.Email)
+	user, err := s.repo.GetByEmail(req.Email)
 	log.Println(user)
 	if err != nil {
 		return err
@@ -44,7 +44,7 @@ func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 		return err
 	}
 
-	token, err := srv.tokenService.Encode(user)
+	token, err := s.tokenService.Encode(user)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) er
 		return err
 	}
 	req.Password = string(hashedPass)
-	if err := srv.repo.Create(req); err != nil {
+	if err := s.repo.Create(req); err != nil {
 		return err
 	}
 	res.User = req
