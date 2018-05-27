@@ -78,6 +78,8 @@ func (s *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Toke
 		return errors.New("invalid user")
 	}
 
+	log.Println("No errors: This is a perfectly VALID token.")
+
 	res.Valid = true
 
 	return nil
