@@ -30,7 +30,7 @@ func main() {
 	// Create a new service
 	srv := micro.NewService(
 		// This name must match the package name given in the protobuf definition
-		micro.Name("shippy.auth"),
+		micro.Name("shippy.user"),
 		micro.Version("latest"),
 	)
 
