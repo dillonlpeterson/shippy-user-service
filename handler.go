@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 
 	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
@@ -66,5 +67,18 @@ func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) er
 }
 
 func (s *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
+
+	// Decode token
+	claims, err := srv.tokenService.Decode(req.Token)
+	if err != nil {
+		return err
+	}
+
+	if claims.User.Id == "" {
+		return errors.New("invalid user")
+	}
+
+	res.Valid = true
+
 	return nil
 }
