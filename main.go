@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
 	micro "github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/registry/mdns"
-	k8s "github.com/micro/kubernetes/go/micro"
 )
 
 func main() {
@@ -28,9 +28,10 @@ func main() {
 	tokenService := &TokenService{repo}
 
 	// Create a new service
-	srv := k8s.NewService(
+	srv := micro.NewService(
 		// This name must match the package name given in the protobuf definition
 		micro.Name("shippy.auth"),
+		micro.Version("latest"),
 	)
 
 	// Init will parse the command line flags
@@ -44,6 +45,6 @@ func main() {
 
 	// Run the server
 	if err := srv.Run(); err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 }
