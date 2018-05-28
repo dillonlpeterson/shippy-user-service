@@ -37,7 +37,7 @@ func main() {
 	// Init will parse the command line flags
 	srv.Init()
 
-	pubsub := srv.Server().Options().Broker
+	pubsub := micro.NewPublisher("user.created", srv.Client())
 	// Will comment this out now to save having to run this locally
 	// publisher := micro.NewPublisher("user.created", srv.Client())
 

@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"log"
 
 	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
-	"github.com/micro/go-micro/broker"
+	micro "github.com/micro/go-micro"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
@@ -16,7 +15,7 @@ const topic = "user.created"
 type service struct {
 	repo         Repository
 	tokenService Authable
-	PubSub       broker.Broker
+	Publisher    micro.Publisher
 }
 
 func (s *service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
@@ -68,13 +67,14 @@ func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) er
 		return err
 	}
 	res.User = req
-	if err := srv.publishEvent(req); err != nil {
+	if err := s.Publisher.Publish(ctx, req); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (srv *service) publishEvent(user *pb.User) error {
+/*
+func (s *service) publishEvent(user *pb.User) error {
 	// Marshall to JSON string
 	body, err := json.Marshal(user)
 	if err != nil {
@@ -90,12 +90,13 @@ func (srv *service) publishEvent(user *pb.User) error {
 	}
 
 	// Publish message to broker
-	if err := srv.PubSub.Publish(topic, msg); err != nil {
+	if err := s.PubSub.Publish(topic, msg); err != nil {
 		log.Printf("[pub] failed: %v", err)
 	}
 
 	return nil
 }
+*/
 
 func (s *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
 
