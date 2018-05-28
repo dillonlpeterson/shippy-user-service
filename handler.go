@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 
@@ -74,26 +75,26 @@ func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) er
 }
 
 func (srv *service) publishEvent(user *pb.User) error {
-	// Marshall to JSON string 
+	// Marshall to JSON string
 	body, err := json.Marshal(user)
 	if err != nil {
 		return err
 	}
 
-	// Create a broker message 
+	// Create a broker message
 	msg := &broker.Message{
 		Header: map[string]string{
-			"id":user.Id,
+			"id": user.Id,
 		},
-		Body: body
+		Body: body,
 	}
 
-	// Publish message to broker 
+	// Publish message to broker
 	if err := srv.PubSub.Publish(topic, msg); err != nil {
 		log.Printf("[pub] failed: %v", err)
 	}
 
-	return nil 
+	return nil
 }
 
 func (s *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
