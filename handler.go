@@ -2,9 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
-	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
+	pb "github.com/dillonlpeterson/shippy-user-service/proto/auth"
 	micro "github.com/micro/go-micro"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
@@ -60,15 +61,15 @@ func (s *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 func (s *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf("Error hashing password: %v", err))
 	}
 	req.Password = string(hashedPass)
 	if err := s.repo.Create(req); err != nil {
-		return err
+		return errors.New(fmt.Sprintf("Errow creating user: %v", err))
 	}
 	res.User = req
 	if err := s.Publisher.Publish(ctx, req); err != nil {
-		return err
+		return errors.New(fmt.Sprintf("Error publishing event: %v", err))
 	}
 	return nil
 }

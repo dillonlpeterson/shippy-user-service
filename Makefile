@@ -1,9 +1,9 @@
 # Calls Protoc Library: AKA: Compiles Protobuf code.
 build:
 	# Updated to use go-micro plugin instead of grpc plugin.
-	protoc -I. --go_out=plugins=micro:. proto/user/user.proto 
+	protoc -I. --go_out=plugins=micro:. proto/auth/auth.proto 
 	# Builds an image by the name user-service (Dot means that build process looks in current directory)
-	docker build -t user-service .
+	docker build -t shippy-auth-service .
 	#docker push dillonlpeterson/user:latest 
 run: 
 	docker run --net="host" \
@@ -14,7 +14,7 @@ run:
 		-e MICRO_SERVER_ADDRESS=:50051 \
 		-e MICRO_REGISTRY=mdns \
 		-e DISABLE_AUTH=true \
-		user-service 
+		shippy-auth-service 
 
 
 

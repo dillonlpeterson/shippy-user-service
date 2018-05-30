@@ -4,7 +4,7 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	pb "github.com/dillonlpeterson/shippy-user-service/proto/user"
+	pb "github.com/dillonlpeterson/shippy-user-service/proto/auth"
 )
 
 var (
