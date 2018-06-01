@@ -7,6 +7,7 @@ import (
 	pb "github.com/dillonlpeterson/shippy-user-service/proto/auth"
 	micro "github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/registry/mdns"
+	k8s "github.com/micro/kubernetes/go/micro"
 )
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 	tokenService := &TokenService{repo}
 
 	// Create a new service
-	srv := micro.NewService(
+	srv := k8s.NewService(
 		// This name must match the package name given in the protobuf definition
 		micro.Name("shippy.auth"),
 	)
