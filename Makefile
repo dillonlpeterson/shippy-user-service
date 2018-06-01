@@ -3,7 +3,9 @@ build:
 	# Updated to use go-micro plugin instead of grpc plugin.
 	protoc -I. --go_out=plugins=micro:. proto/auth/auth.proto 
 	# Builds an image by the name user-service (Dot means that build process looks in current directory)
-	docker build -t shippy-auth-service .
+	#docker build -t shippy-auth-service .
+	docker build -t us.gcr.io/shippy-freight-205815/auth:latest . 
+	docker push us.gcr.io/shippy-freight-205815/auth:latest
 	#docker push dillonlpeterson/user:latest 
 run: 
 	docker run --net="host" \
